@@ -29,3 +29,8 @@ button:hover {
   background: #422476;
   color: white;
 }
+ 
+.nenhumVoto {
+  font-style: italic;
+  color: #666;
+}
