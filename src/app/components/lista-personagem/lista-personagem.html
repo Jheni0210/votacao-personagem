@@ -5,6 +5,7 @@
         [nome]="personagem.nome"
         [imagem]="personagem.imagem"
         [totalVotos]="personagem.votos"
-        (votou)="incremetarVotoPersonagem($event)"></app-card-personagem>
+        (votou)="incremetarVotoPersonagem(personagem.id)"
+        ></app-card-personagem>
     }
 </section>

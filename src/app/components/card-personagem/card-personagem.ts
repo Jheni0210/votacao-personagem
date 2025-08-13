@@ -12,7 +12,7 @@ export class CardPersonagem {
   imagem = input<string>();
   totalVotos = input<number>();
 
-  votou = output<number|undefined>();
+  votou = output<number|undefined | null>();
 }
 
 
