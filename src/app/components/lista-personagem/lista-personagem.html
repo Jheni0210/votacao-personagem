@@ -1,11 +1,13 @@
 <section class="grid">
-    @for(personagem of personagens; track personagem){
+    @for(personagem of personagens; track $index){
         <app-card-personagem 
         [id]="personagem.id"
         [nome]="personagem.nome"
         [imagem]="personagem.imagem"
         [totalVotos]="personagem.votos"
-        (votou)="incremetarVotoPersonagem(personagem.id)"
-        ></app-card-personagem>
+        (votou)="incremetarVotoPersonagem($event)"
+        />
+    } @empty {
+        <p>Nenhum personagem encontrado</p>
     }
 </section>

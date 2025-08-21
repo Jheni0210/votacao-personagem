@@ -1,6 +1,28 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-interface IPersonagem {
+// Helper function to assert the response matches IPersonagem
+function assertPersonagem(response: any): IPersonagem {
+  if (!response || typeof response !== 'object') {
+    throw new Error('Invalid response format - expected an object');
+  }
+  
+  const { id, nome, imagem, votos } = response;
+  
+  if (typeof id !== 'number' || 
+      typeof nome !== 'string' || 
+      typeof imagem !== 'string' || 
+      typeof votos !== 'number') {
+    throw new Error('Invalid response format - missing required fields');
+  }
+  
+  return { id, nome, imagem, votos };
+}
+
+
+export interface IPersonagem {
   id: number;
   nome: string;
   imagem: string;
@@ -10,23 +32,35 @@ interface IPersonagem {
 @Injectable({
   providedIn: 'root'
 })
-export class Personagens {
-  private personagens: IPersonagem[] = [
-  { id: 1, nome: "claudio", imagem: "https://static.vecteezy.com/ti/fotos-gratis/t1/36471598-ai-gerado-colorida-camaleao-empoleirado-em-uma-arvore-ramo-com-vibrante-neon-luz-efeito-digital-arte-generativo-ai-foto.jpg", votos: 0 },
-  { id: 2, nome: "paula", imagem: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRINKLRdnJnkQpBYDPYnxSTj4rcAZNRFA0wDQ&s", votos: 0 },
-  { id: 3, nome: "olivia", imagem: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoNwTfP0KVPfRBPIkaNWuOyGBmVN0TzlXMSA&s", votos: 0 },
-  { id: 4, nome: "paloma", imagem: "https://s2.glbimg.com/cYa3pKAKIPidjKyGPuAd8T4Hd1I=/e.glbimg.com/og/ed/f/original/2017/08/21/dog-2570398_960_720.jpg", votos: 0 },
-  { id: 5, nome: "jorge", imagem: "https://st.depositphotos.com/1475009/1572/i/450/depositphotos_15725225-stock-photo-capybara-hydrochoerus-hydrochaeris-resting.jpg", votos: 0 },
-  { id: 6, nome: "Gino", imagem: "https://st2.depositphotos.com/1703608/7553/i/450/depositphotos_75536045-stock-photo-portrait-of-a-cute-little.jpg", votos: 0 },
-  { id: 7, nome: "Big", imagem: "https://jpimg.com.br/uploads/2025/02/8-animais-mais-fortes-do-mundo.jpg", votos: 0 },
-  { id: 8, nome: "raph", imagem: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCga4d4OwD-AepJ9cYes_38GxF6GuK5b_DpoH3Q7ENiqWrzUXZYrGjwkORogXkGWma_jo&usqp=CAU", votos: 0 },
-  ]
 
-  constructor() { 
-    console.log(this.personagens);
+export class Personagens {
+  private readonly API_URL = 'http://localhost:3000/personagens';
+
+  constructor(private http: HttpClient) {}
+
+  getPersonagens(id: number) {
+    return this.http.get(`${this.API_URL}/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }) as unknown as Observable<IPersonagem>;
   }
-  
-  getPersonagens(): IPersonagem[] {
-    return this.personagens;
+
+  getImagemUrl(imagemPath: string): string {
+    if (!imagemPath) return 'https://via.placeholder.com/150x150/cccccc/666666?text=Sem+Imagem';
+    if (imagemPath.startsWith('http')) return imagemPath;
+    return `${this.API_URL}/${imagemPath.replace(/^\//, '')}`;
   }
+
+
+// votarPersonagem(id: number, totalVotos: number): Observable<any> {
+//  //Assuming your API accepts PATCH requests to update the vote count
+//    return this.http.patch(`${this.API_URL}/${id}`, { votos: totalVotos + 1 });
+//   }
+
+  // getPersonagemPorId(): Observable<IPersonagem> {
+  //   return this.http.get(this.baseUrl+'/personagens/id')
+  // }
+
 }

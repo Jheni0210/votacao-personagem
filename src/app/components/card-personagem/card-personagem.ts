@@ -2,17 +2,16 @@ import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-card-personagem',
+  standalone: true,
   imports: [],
   templateUrl: './card-personagem.html',
   styleUrl: './card-personagem.css',
 })
 export class CardPersonagem {
-  id= input<number>();
-  nome = input<string>();
-  imagem = input<string>();
-  totalVotos = input<number>();
+  id = input.required<number>();
+  nome = input.required<string>();
+  imagem = input.required<string>();
+  totalVotos = input.required<number>();
 
-  votou = output<number|undefined | null>();
+  votou = output<{id: number, totalVotos: number}>();
 }
-
-

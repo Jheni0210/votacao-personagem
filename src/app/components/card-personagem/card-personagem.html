@@ -1,5 +1,5 @@
 <div class="card">
-  <img [src]="imagem()" [alt]="nome()" />
+  <img [src]="imagem()" [alt]="nome()"/>
   <h3>{{ nome() }}</h3>
 
   @if (totalVotos() === 0) {
@@ -7,5 +7,5 @@
   } @else {
   <p> {{totalVotos()}} votos</p>
   }
-  <button (click)="votou.emit(id())">Votar</button>
+  <button (click)="votou.emit({id: id(), totalVotos:totalVotos()})">Votar</button>
 </div>
