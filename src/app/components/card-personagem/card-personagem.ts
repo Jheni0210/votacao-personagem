@@ -8,10 +8,10 @@ import { Component, input, output } from '@angular/core';
   styleUrl: './card-personagem.css',
 })
 export class CardPersonagem {
-  id = input.required<number>();
   nome = input.required<string>();
   imagem = input.required<string>();
   totalVotos = input.required<number>();
+  id = input.required<number>();
 
-  votou = output<{id: number, totalVotos: number}>();
+  votou = output<{id: number; totalVotos: number}>();
 }

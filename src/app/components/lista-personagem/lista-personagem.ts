@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CardPersonagem } from '../card-personagem/card-personagem';
-import { Personagens } from '../../services/personagens.service';
-
+import { PersonagensService } from '../../services/personagens-service';
 
 interface IPersonagem {
   id: number;
@@ -16,33 +15,34 @@ interface IPersonagem {
   templateUrl: './lista-personagem.html',
   styleUrl: './lista-personagem.css',
 })
-export class ListaPersonagem implements OnInit , OnDestroy {
-  personagens: IPersonagem[] = []
-  constructor(private personagensService: Personagens) {}
+export class ListaPersonagem implements OnInit, OnDestroy {
+  personagens: IPersonagem[] = [];
 
-  carregarPersonagens() {
-    this.personagensService.getPersonagens().subscribe((respostaDaAPI) => {
-     this.personagens = respostaDaAPI;
+  constructor(private personagemService: PersonagensService) {
+    console.log('constructor');
+  }
+  ngOnDestroy(): void {
+   console.log('ngOnDestroy') 
+  }
+
+  carregarPersonagem() {
+    this.personagemService.getPersonagens().subscribe((respostaDaApi) => {
+      this.personagens = respostaDaApi;
     });
   }
 
- ngOnInit() {
-  console.log('ngOnInit');
-  this.carregarPersonagens();
- }
+  ngOnInit() {
+    console.log('ngOnInit');
+    this.carregarPersonagem();
+  }
 
- ngOnDestroy() {
-  console.log('ngOnDestroy') 
- }
+  incremetarVotoPersonagem(evento: { id: number; totalVotos: number }) {
+    this.personagemService
+      .votarPersonagem(evento.id, evento.totalVotos)
+      .subscribe((resposta) => {
+        this.carregarPersonagem();
+      });
+  }
 
-
-  incremetarVotoPersonagem(evento: {id :number, totalVotos: number}) {
-   this.personagensService
-   .votarPersonagem(evento.id, evento.totalVotos)
-   .subscribe((resposta) => {
-    this.carregarPersonagens();
-   })
-    }
-    
 
 }
